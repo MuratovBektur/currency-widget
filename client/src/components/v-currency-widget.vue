@@ -1,7 +1,7 @@
 <template>
   <div v-cloak>
-    <template v-if="isLoaded">
-      <div v-if="!isFailed" class="v-currency-widget">
+    <template v-if="!isFailed">
+      <div v-if="isLoaded" class="v-currency-widget">
         <div class="v-currency-widget__header">
           <div class="v-currency-widget__header-title">
             Курс {{ activeCurrency.name }} на {{ date }}
@@ -149,22 +149,23 @@
           </div>
         </div>
       </div>
-      <div v-else class="v-currency-widget-failed">
-        <div class="v-currency-widget-failed__header"></div>
-        <div class="v-currency-widget-failed__body">
-          <h2>Что пошло не так попробуйте позже...</h2>
+      <div v-else class="v-currency-widget-loading">
+        <div class="v-currency-widget-loading__header"></div>
+        <div class="v-currency-widget-loading__body">
+          <div class="v-currency-widget-loading__spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
         </div>
       </div>
     </template>
-    <div v-else class="v-currency-widget-loading">
-      <div class="v-currency-widget-loading__header"></div>
-      <div class="v-currency-widget-loading__body">
-        <div class="v-currency-widget-loading__spinner">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+
+    <div v-else class="v-currency-widget-failed">
+      <div class="v-currency-widget-failed__header"></div>
+      <div class="v-currency-widget-failed__body">
+        <h2 align="center">Что пошло не так попробуйте позже...</h2>
       </div>
     </div>
   </div>
@@ -925,6 +926,20 @@ $animation-duration: 0.8s;
         transform: rotate(360deg);
       }
     }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .v-currency-widget-failed,
+  .v-currency-widget-loading {
+    width: 610px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .v-currency-widget-failed,
+  .v-currency-widget-loading {
+    width: 320px;
   }
 }
 </style>
