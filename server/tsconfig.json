@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "typeRoots": [
+         "./node_modules/@types"
+      ],
+      "esModuleInterop": true,
+      "outDir": "dist",
+      "baseUrl": "."
+    }
+  }

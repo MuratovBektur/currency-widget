@@ -1,0 +1,23 @@
+{
+  "name": "currency-widget",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "preinstall:client": "cd client && npm i",
+    "preinstall:server": "cd server && npm i",
+    "preinstall": "npm run preinstall:server && npm run preinstall:client ",
+    "dev:client": "cd client && npm run serve",
+    "dev:server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client \" ",
+    "start:client": "cd client && npm run start",
+    "start:server": "cd server && npm run start",
+    "start": "concurrently \"npm run start:server\" \"npm run start:client \" "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^6.0.1"
+  }
+}
