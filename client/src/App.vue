@@ -9,10 +9,10 @@
 <script lang="ts">
 import Vue from "vue";
 
-import vCurrencyWidget from "./components/v-currency-widget.vue";
+// import vCurrencyWidget from ;
 export default Vue.extend({
   components: {
-    vCurrencyWidget,
+    vCurrencyWidget: () => import("./components/v-currency-widget/index.vue"),
   },
 });
 </script>

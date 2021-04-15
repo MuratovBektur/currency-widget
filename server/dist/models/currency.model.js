@@ -42,24 +42,7 @@ exports.__esModule = true;
 var mongoose_1 = __importDefault(require("mongoose"));
 var axios_1 = __importDefault(require("axios"));
 var Schema = mongoose_1["default"].Schema;
-var connectMongoose = function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoose_1["default"].connect("mongodb+srv://user:user@cluster0.cnakz.mongodb.net/currencies?retryWrites=true&w=majority", { useUnifiedTopology: true, useNewUrlParser: true })];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); };
-mongoose_1["default"].set("useFindAndModify", false);
-process.on("SIGINT", function () {
-    mongoose_1["default"].connection.close(function () {
-        console.log("Mongoose disconnected on app termination");
-        process.exit(0);
-    });
-});
-var currencyScheme = new Schema({ name: String, rate: Number }, { versionKey: false });
+var currencyScheme = new Schema({ date: String, currencies: [{ name: String, rate: Number }] }, { versionKey: false });
 currencyScheme.set("toJSON", {
     transform: function (document, returnedObject) {
         returnedObject.id = returnedObject._id.toString();
@@ -69,37 +52,31 @@ currencyScheme.set("toJSON", {
 });
 var Currency = mongoose_1["default"].model("currency", currencyScheme);
 var loadToDB = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var data_1, transformedData, e_1;
+    var data_1, date, transformedData, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, 6, 7]);
-                return [4 /*yield*/, connectMongoose()];
+                _a.trys.push([0, 4, , 5]);
+                return [4 /*yield*/, Currency.deleteMany({})];
             case 1:
                 _a.sent();
-                return [4 /*yield*/, Currency.deleteMany({})];
-            case 2:
-                _a.sent();
                 return [4 /*yield*/, axios_1["default"].get("https://api.openrates.io/latest")];
-            case 3:
+            case 2:
                 data_1 = (_a.sent()).data;
+                date = data_1.date;
                 transformedData = Object.keys(data_1.rates).map(function (name, index) { return ({
-                    id: index,
                     name: name,
                     rate: data_1.rates[name]
                 }); });
-                return [4 /*yield*/, Currency.create(transformedData)];
-            case 4:
+                return [4 /*yield*/, Currency.create({ date: date, currencies: transformedData })];
+            case 3:
                 _a.sent();
-                return [3 /*break*/, 7];
-            case 5:
+                return [3 /*break*/, 5];
+            case 4:
                 e_1 = _a.sent();
                 console.error(e_1);
-                return [3 /*break*/, 7];
-            case 6:
-                mongoose_1["default"].disconnect();
-                return [7 /*endfinally*/];
-            case 7: return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -112,30 +89,29 @@ var CurrencyModel = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, 5, 6]);
+                        _a.trys.push([0, 3, , 4]);
                         return [4 /*yield*/, loadToDB()];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, connectMongoose()];
-                    case 2:
-                        _a.sent();
                         return [4 /*yield*/, Currency.find({})];
-                    case 3:
+                    case 2:
                         docs = _a.sent();
                         return [2 /*return*/, JSON.stringify({
                                 success: true,
-                                currencies: docs
+                                date: docs[0].date,
+                                currencies: docs[0].currencies.map(function (currency) { return ({
+                                    id: currency._id,
+                                    name: currency.name,
+                                    rate: currency.rate
+                                }); })
                             })];
-                    case 4:
+                    case 3:
                         e_2 = _a.sent();
                         return [2 /*return*/, JSON.stringify({
                                 success: false,
                                 reason: e_2.message
                             })];
-                    case 5:
-                        mongoose_1["default"].disconnect();
-                        return [7 /*endfinally*/];
-                    case 6: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -146,12 +122,9 @@ var CurrencyModel = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, 4, 5]);
-                        return [4 /*yield*/, connectMongoose()];
-                    case 1:
-                        _a.sent();
+                        _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, Currency.findOne({ _id: id })];
-                    case 2:
+                    case 1:
                         doc = _a.sent();
                         if (doc === null) {
                             return [2 /*return*/, JSON.stringify({
@@ -165,17 +138,14 @@ var CurrencyModel = /** @class */ (function () {
                                 success: true,
                                 currency: doc
                             })];
-                    case 3:
+                    case 2:
                         e_3 = _a.sent();
                         console.error(e_3);
                         return [2 /*return*/, JSON.stringify({
                                 success: false,
                                 reason: e_3.message
                             })];
-                    case 4:
-                        mongoose_1["default"].disconnect();
-                        return [7 /*endfinally*/];
-                    case 5: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
