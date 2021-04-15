@@ -66,6 +66,10 @@
               activateCurrencyCardListAnimationToRight,
               activateCurrencyCardListAnimationToLeft,
             }"
+            :currencyPerPage="currencyPerPage"
+            :increaseRate="increaseRate"
+            :activeCurrencyName="activeCurrency.name"
+            :calculatedRate="calculatedRate"
           />
           <div class="v-currency-widget__pagination">
             <button
@@ -188,7 +192,7 @@ export default Vue.extend({
       increaseRate: 1,
       currencyList: [],
       date: new Date().toLocaleDateString(),
-      currencyPerPage: 1,
+      currencyPerPage: 11,
       currencyCardPerPage: 1,
       penultIndex: 0,
       penultCardIndex: 0,
@@ -218,10 +222,10 @@ export default Vue.extend({
     this.onResize();
   },
 
-  updated(): void {
-    this.changeFontSizeOfCalcData();
-    this.changeFontSizeOfInputData();
-  },
+  // updated(): void {
+  //   this.changeFontSizeOfCalcData();
+  //   this.changeFontSizeOfInputData();
+  // },
   destroyed(): void {
     window.removeEventListener("resize", this.debouncedOnResize());
   },
@@ -463,19 +467,6 @@ export default Vue.extend({
       );
 
       return result;
-      // return this.activeCurrencyCardList.reduce(
-      //   (acc: { number: number | string }, currency: currencyType) => {
-      //     return {
-      //       ...acc,
-      //       [currency.id]: calcRated(
-      //         this.increaseRate,
-      //         this.activeCurrency.rate,
-      //         currency.rate
-      //       ),
-      //     };
-      //   },
-      //   {}
-      // );
     },
     showRightChevron(): boolean {
       return this.currencyPerPage === this.activeCurrencyList.length;
@@ -534,85 +525,6 @@ $animation-duration: 0.8s;
     display: inline-block;
     margin-right: 10px;
   }
-  &__header {
-    padding: 30px 17px 0 24px;
-    background-color: #ffe782;
-  }
-  &__header-title {
-    font-family: "Roboto";
-    font-style: normal;
-    font-weight: normal;
-    font-size: 21px;
-    line-height: 25px;
-    /* identical to box height */
-
-    color: #2b2d33;
-  }
-  &__currency-list {
-    min-height: 48px;
-    margin: 8px 0 0 0px;
-    display: flex;
-    overflow: hidden;
-    &_right {
-      transform: translateX(2000px);
-      animation: slide-right $animation-duration forwards;
-      &_close {
-        animation: slide-right-out $animation-duration forwards;
-        transform: translateX(0);
-      }
-    }
-    &_left {
-      transform: translateX(-2000px);
-      animation: slide-left $animation-duration forwards;
-      &_close {
-        animation: slide-left-out $animation-duration forwards;
-        transform: translateX(0);
-      }
-    }
-  }
-  @keyframes slide-right {
-    100% {
-      transform: translateX(0);
-    }
-  }
-  @keyframes slide-right-out {
-    100% {
-      transform: translateX(-2000px);
-    }
-  }
-  @keyframes slide-left {
-    100% {
-      transform: translateX(0);
-    }
-  }
-  @keyframes slide-left-out {
-    100% {
-      transform: translateX(2000px);
-    }
-  }
-  &__currency-card:only-of-type {
-    margin-bottom: 5px;
-  }
-  &__currency-item {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
-    width: 90px;
-    text-align: center;
-    padding: 14px 32px 18px;
-    color: #ccae68;
-    cursor: pointer;
-    &::first-child {
-      margin-left: 10px;
-    }
-    &_active {
-      background-color: #fff;
-      border-radius: 8px 8px 0 0;
-      color: #2b2d33;
-    }
-  }
 
   &__chevron-btn {
     cursor: pointer;
@@ -625,119 +537,7 @@ $animation-duration: 0.8s;
     // height: 471px;
     background-color: #fff;
   }
-  &__calc-input-panel {
-    width: 176px;
-    margin-left: auto;
-    font-size: 18px;
-    line-height: 21px;
 
-    color: #b9b9b9;
-  }
-  &__calc-input {
-    font-family: Roboto;
-    font-size: 18px;
-    line-height: 21px;
-    padding: 0 4px 4px 0;
-    width: 121px;
-    text-align: right;
-    margin-right: 4px;
-    border: none;
-    border-bottom: 1px solid #d9d9d9;
-    color: #2b2d33;
-  }
-  &__calc-input:focus {
-    outline: none;
-  }
-
-  &__currency-card-list {
-    margin-top: 26px;
-    padding: 0 4px;
-    overflow: hidden;
-    &_right {
-      transform: translateX(2000px);
-      animation: slide-cards-right $animation-duration forwards;
-      &_close {
-        animation: slide-cards-right-out $animation-duration forwards;
-        transform: translateX(0);
-      }
-    }
-    &_left {
-      transform: translateX(-2000px);
-      animation: slide-cards-left $animation-duration forwards;
-      &_close {
-        animation: slide-cards-left-out $animation-duration forwards;
-        transform: translateX(0);
-      }
-    }
-  }
-
-  @keyframes slide-cards-right {
-    100% {
-      transform: translateX(0);
-    }
-  }
-  @keyframes slide-cards-right-out {
-    100% {
-      transform: translateX(-2000px);
-    }
-  }
-  @keyframes slide-cards-left {
-    100% {
-      transform: translateX(0);
-    }
-  }
-  @keyframes slide-cards-left-out {
-    100% {
-      transform: translateX(2000px);
-    }
-  }
-  &__currency-card {
-    display: inline-flex;
-    margin-right: 18px;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 18px 24px 17px 30px;
-    width: 323px;
-    height: 138px;
-    box-shadow: 0px 3px 6px rgba(157, 157, 157, 0.16);
-    border-radius: 12px;
-  }
-  &__currency-card:nth-child(even) {
-    margin-right: 0;
-  }
-  &__currency-card:nth-child(4n + 3),
-  &__currency-card:nth-child(4n + 4) {
-    margin-top: 18px;
-    margin-bottom: 5px;
-  }
-  &__currency-card-input-data {
-    font-weight: 300;
-    font-size: 24px;
-    line-height: 28px;
-    letter-spacing: 0.0171429px;
-
-    color: #b9b9b9;
-  }
-  &__currency-card-input-data-number {
-    color: #2b2d33;
-  }
-  &__currency-card-calculated-data {
-    font-weight: 300;
-    font-size: 24px;
-    line-height: 58px;
-
-    letter-spacing: 0.02px;
-
-    color: #2b2d33;
-  }
-  &__currency-card-calculated-data-number {
-    font-weight: 300;
-    font-size: 2em;
-    line-height: 56px;
-    letter-spacing: 0.037px;
-
-    color: #2b2d33;
-  }
   &__pagination {
     display: flex;
     justify-content: center;
@@ -773,68 +573,11 @@ $animation-duration: 0.8s;
 @media screen and (max-width: 992px) {
   .v-currency-widget {
     width: 610px;
-    &__currency-item {
-      padding: 14px 31px 18px;
-    }
-    &__calc-input-panel {
-      width: 156px;
-      font-size: 16px;
-      line-height: 18px;
-    }
-    &__calc-input {
-      width: 99px;
-      font-size: 16px;
-      line-height: 18px;
-    }
-    &__currency-card-list {
-      margin-top: 24px;
-    }
-    &__currency-card {
-      margin-right: 14px;
-      padding: 23px 24px 19px 30px;
-      width: 270px;
-      &-input-data {
-        font-size: 18px;
-        line-height: 21px;
-      }
-      &-calculated-data {
-        font-size: 18px;
-        line-height: 21px;
-      }
-      // &-calculated-data-number {
-      //   font-size: 36px;
-      //   line-height: 42px;
-      // }
-    }
   }
 }
 @media screen and (max-width: 768px) {
   .v-currency-widget {
     width: 320px;
-    &__currency-item {
-      padding: 14px 26px 18px;
-    }
-    &__calc-input-panel {
-      width: 140px;
-      font-size: 14px;
-      line-height: 16px;
-    }
-    &__calc-input {
-      width: 99px;
-      font-size: 14px;
-      line-height: 16px;
-    }
-    &__currency-card-list {
-      margin-top: 23px;
-    }
-    &__currency-card {
-      width: 264px;
-      &:nth-child(even) {
-        margin-right: 0;
-        margin-top: 18px;
-        margin-bottom: 5px;
-      }
-    }
   }
 }
 
