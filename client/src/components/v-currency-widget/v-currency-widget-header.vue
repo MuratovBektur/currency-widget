@@ -88,21 +88,12 @@ export default Vue.extend({
       required: true,
     },
   },
-  //   data(): IState {
-  //     return {
-  //       activateCurrencyListAnimationToLeft: false,
-  //       activateCurrencyListAnimationToRight: false,
-  //       activateCurrencyCardListAnimationToLeft: false,
-  //       activateCurrencyCardListAnimationToRight: false,
-  //     };
-  //   },
 });
 </script>
 
 <style lang="scss">
 $animation-duration: 0.8s;
 .v-currency-widget-header {
-  width: 720px;
   padding: 30px 17px 0 24px;
   background-color: #ffe782;
   &__title {
@@ -153,9 +144,6 @@ $animation-duration: 0.8s;
       transform: translateX(2000px);
     }
   }
-  &__currency-card:only-of-type {
-    margin-bottom: 5px;
-  }
   &__currency-item {
     font-family: Roboto;
     font-style: normal;
@@ -182,6 +170,20 @@ $animation-duration: 0.8s;
     position: relative;
     margin: auto 5px;
     bottom: 3px;
+  }
+}
+@media screen and (max-width: 992px) {
+  .v-currency-widget-header {
+    &__currency-item {
+      padding: 14px 31px 18px;
+    }
+  }
+}
+@media screen and (max-width: 768px) {
+  .v-currency-widget-header {
+    &__currency-item {
+      padding: 14px 26px 18px;
+    }
   }
 }
 </style>

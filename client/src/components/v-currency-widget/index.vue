@@ -17,15 +17,11 @@
           }"
         />
         <div class="v-currency-widget__currency-info">
-          <div class="v-currency-widget__calc-input-panel">
-            <input
-              type="number"
-              v-model="increaseRate"
-              class="v-currency-widget__calc-input"
-            />
-            {{ activeCurrency.name }}
-          </div>
-          <div
+          <vCurrencyWidgetInput
+            v-model="increaseRate"
+            :activeCurrencyName="activeCurrency.name"
+          />
+          <!-- <div
             class="v-currency-widget__currency-card-list"
             :class="{
               'v-currency-widget__currency-card-list_right': activateCurrencyCardListAnimationToRight,
@@ -62,7 +58,15 @@
                 {{ currency.name }}
               </div>
             </div>
-          </div>
+          </div> -->
+
+          <vCurrencyWidgetCurrencyCardList
+            :activeCurrencyCardList="activeCurrencyCardList"
+            :activateAnimation="{
+              activateCurrencyCardListAnimationToRight,
+              activateCurrencyCardListAnimationToLeft,
+            }"
+          />
           <div class="v-currency-widget__pagination">
             <button
               @click="onPrevCardList"
@@ -141,7 +145,11 @@ import Vue from "vue";
 import axios from "axios";
 import debounce from "lodash/debounce";
 import { DebouncedFunc } from "lodash";
-import { vCurrencyWidgetHeader } from "./index.js";
+import {
+  vCurrencyWidgetHeader,
+  vCurrencyWidgetInput,
+  vCurrencyWidgetCurrencyCardList,
+} from "./index.js";
 
 type currencyType = {
   id: number;
@@ -198,6 +206,8 @@ export default Vue.extend({
 
   components: {
     vCurrencyWidgetHeader,
+    vCurrencyWidgetInput,
+    vCurrencyWidgetCurrencyCardList,
   },
 
   async mounted(): Promise<void> {
