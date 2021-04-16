@@ -73,7 +73,7 @@ import {
   vCurrencyWidgetInput,
   vCurrencyWidgetCurrencyCardList,
   vCurrencyWidgetPagination,
-} from "./index.js";
+} from "./index";
 
 type currencyType = {
   id: number;

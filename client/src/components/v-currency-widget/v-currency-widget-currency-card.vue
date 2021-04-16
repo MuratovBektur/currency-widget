@@ -36,11 +36,6 @@ export default Vue.extend({
     calculatedRate: Array,
     currencyPerPage: Number,
   },
-  updated() {
-    this.changeFontSizeOfCalcData();
-    this.changeFontSizeOfInputData();
-    console.log("updated");
-  },
   methods: {
     getStyle(node: HTMLElement, styleProp: string): number {
       return +window
@@ -53,23 +48,12 @@ export default Vue.extend({
         const currencyCardNode: any = this.$refs.calculatedData;
         let height = this.getStyle(currencyCardNode, "height");
 
-        const minHeigth = this.currencyPerPage > 5 ? 70 : 42;
-        console.log("______________");
-        console.log("______________");
-        console.log("______________");
-        console.log("______________");
-        console.log("______________");
-        console.log("height", height);
-        console.log("minHeigth", minHeigth);
+        const minHeigth = this.currencyPerPage > 6 ? 70 : 42;
 
-        let start = 0;
-        while (height > minHeigth && start < 30) {
-          start++;
+        while (height > minHeigth) {
           currencyCardNode.style.fontSize =
             this.getStyle(currencyCardNode, "font-size") - 1 + "px";
           height = this.getStyle(currencyCardNode, "height");
-          console.log("height in", height);
-          console.log("font-size in", currencyCardNode.style.fontSize);
         }
 
         if (currencyCardNode.innerText.length < 13) {
@@ -81,31 +65,15 @@ export default Vue.extend({
     changeFontSizeOfInputData() {
       this.$nextTick(function () {
         const currencyCardNode: any = this.$refs.inputData;
-        // console.log("test", currencyCardNode);
-        let height = +window
-          .getComputedStyle(currencyCardNode)
-          .getPropertyValue("height")
-          .slice(0, -2);
-        // currencyCardNode
+
+        let height = this.getStyle(currencyCardNode, "height");
 
         const minHeigth = this.currencyPerPage > 6 ? 50 : 40;
-        // console.log("height", height, minHeigth);
-        // console.log("another one", currencyCardNode.offsetHeight);
-        let start = 0;
-        while (height > minHeigth && start < 30) {
-          start++;
+
+        while (height > minHeigth) {
           currencyCardNode.style.fontSize =
-            +window
-              .getComputedStyle(currencyCardNode)
-              .getPropertyValue("font-size")
-              .slice(0, -2) -
-            1 +
-            "px";
-          height = +window
-            .getComputedStyle(currencyCardNode)
-            ["height"] // .getPropertyValue("height")
-            .slice(0, -2);
-          // console.log("height", height, currencyCardNode.style.fontSize);
+            this.getStyle(currencyCardNode, "font-size") - 1 + "px";
+          height = this.getStyle(currencyCardNode, "height");
         }
 
         if (currencyCardNode.innerText.length < 22) {
@@ -120,12 +88,12 @@ export default Vue.extend({
     this.changeFontSizeOfInputData();
   },
   watch: {
-    // calculatedRate() {
-    //   this.changeFontSizeOfCalcData();
-    // },
-    // increaseRate() {
-    //   this.changeFontSizeOfInputData();
-    // },
+    calculatedRate() {
+      this.changeFontSizeOfCalcData();
+    },
+    increaseRate() {
+      this.changeFontSizeOfInputData();
+    },
     currencyPerPage(val) {
       console.log("currencyPerPage in card", val);
       this.changeFontSizeOfCalcData();

@@ -2,7 +2,8 @@
   <div class="v-currency-widget-input">
     <input
       type="number"
-      v-model="inputVal"
+      :value="value"
+      @input="onChangeInput"
       class="v-currency-widget-input__calc-input"
     />
     {{ activeCurrencyName }}
@@ -14,17 +15,13 @@ import Vue from "vue";
 
 export default Vue.extend({
   props: {
-    value: [Number, String],
+    value: [Number, String, Function],
     activeCurrencyName: String,
   },
-  computed: {
-    inputVal: {
-      get() {
-        return this.value;
-      },
-      set(val: any): void {
-        this.$emit("input", val);
-      },
+  methods: {
+    onChangeInput(e: Event) {
+      const target = e.target as HTMLInputElement;
+      this.$emit("input", target.value);
     },
   },
 });
