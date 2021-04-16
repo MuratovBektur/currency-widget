@@ -21,44 +21,6 @@
             v-model="increaseRate"
             :activeCurrencyName="activeCurrency.name"
           />
-          <!-- <div
-            class="v-currency-widget__currency-card-list"
-            :class="{
-              'v-currency-widget__currency-card-list_right': activateCurrencyCardListAnimationToRight,
-              'v-currency-widget__currency-card-list_right_close': activateCurrencyCardListAnimationToRight,
-              'v-currency-widget__currency-card-list_left': activateCurrencyCardListAnimationToLeft,
-              'v-currency-widget__currency-card-list_left_close': activateCurrencyCardListAnimationToLeft,
-            }"
-          >
-            <div
-              v-for="currency of activeCurrencyCardList"
-              :key="currency.id"
-              class="v-currency-widget__currency-card"
-            >
-              <div
-                class="v-currency-widget__currency-card-input-data"
-                ref="inputData"
-              >
-                <span
-                  class="v-currency-widget__currency-card-input-data-number"
-                >
-                  {{ increaseRate }}
-                </span>
-                {{ activeCurrency.name }} =
-              </div>
-              <div
-                class="v-currency-widget__currency-card-calculated-data"
-                ref="calculatedData"
-              >
-                <span
-                  class="v-currency-widget__currency-card-calculated-data-number"
-                >
-                  {{ calculatedRate[currency.id] }}
-                </span>
-                {{ currency.name }}
-              </div>
-            </div>
-          </div> -->
 
           <vCurrencyWidgetCurrencyCardList
             :activeCurrencyCardList="activeCurrencyCardList"
@@ -71,55 +33,12 @@
             :activeCurrencyName="activeCurrency.name"
             :calculatedRate="calculatedRate"
           />
-          <div class="v-currency-widget__pagination">
-            <button
-              @click="onPrevCardList"
-              class="v-currency-widget__pagination-btn"
-              :disabled="!showLeftPaginationBtn"
-              :class="{
-                'v-currency-widget__pagination-btn_disable': !showLeftPaginationBtn,
-              }"
-            >
-              <div class="mr-3">
-                <svg
-                  width="8"
-                  height="12"
-                  viewBox="0 0 8 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M7.40991 10.58L2.82991 6L7.40991 1.41L5.99991 0L-8.7738e-05 6L5.99991 12L7.40991 10.58Z"
-                    :fill="showLeftPaginationBtn ? '#282828' : '#787878'"
-                  />
-                </svg>
-              </div>
-              <span>Назад</span>
-            </button>
-            <button
-              @click="onNextCardList"
-              :disabled="!showRightPaginationBtn"
-              class="v-currency-widget__pagination-btn"
-              :class="{
-                'v-currency-widget__pagination-btn_disable': !showRightPaginationBtn,
-              }"
-            >
-              <div class="mr-3">Далее</div>
-
-              <svg
-                width="8"
-                height="12"
-                viewBox="0 0 8 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 10.58L4.58 6L0 1.41L1.41 0L7.41 6L1.41 12L0 10.58Z"
-                  :fill="showRightPaginationBtn ? '#282828' : '#787878'"
-                />
-              </svg>
-            </button>
-          </div>
+          <vCurrencyWidgetPagination
+            :showLeftPaginationBtn="showLeftPaginationBtn"
+            :showRightPaginationBtn="showRightPaginationBtn"
+            @on-prev-card-list="onPrevCardList"
+            @on-next-card-list="onNextCardList"
+          />
         </div>
       </div>
       <div v-else class="v-currency-widget-loading">
@@ -153,6 +72,7 @@ import {
   vCurrencyWidgetHeader,
   vCurrencyWidgetInput,
   vCurrencyWidgetCurrencyCardList,
+  vCurrencyWidgetPagination,
 } from "./index.js";
 
 type currencyType = {
@@ -212,6 +132,7 @@ export default Vue.extend({
     vCurrencyWidgetHeader,
     vCurrencyWidgetInput,
     vCurrencyWidgetCurrencyCardList,
+    vCurrencyWidgetPagination,
   },
 
   async mounted(): Promise<void> {
@@ -221,11 +142,6 @@ export default Vue.extend({
     this.activeCurrency = this.currencyList[0];
     this.onResize();
   },
-
-  // updated(): void {
-  //   this.changeFontSizeOfCalcData();
-  //   this.changeFontSizeOfInputData();
-  // },
   destroyed(): void {
     window.removeEventListener("resize", this.debouncedOnResize());
   },
@@ -243,62 +159,7 @@ export default Vue.extend({
         console.error(e);
       }
     },
-    changeFontSizeOfInputData() {
-      const currencyCardList: any = this.$refs.inputData;
-      currencyCardList.forEach((node: HTMLElement) => {
-        let height = +window
-          .getComputedStyle(node)
-          .getPropertyValue("height")
-          .slice(0, -2);
 
-        while (height > 30) {
-          node.style.fontSize =
-            +window
-              .getComputedStyle(node)
-              .getPropertyValue("font-size")
-              .slice(0, -2) -
-            1 +
-            "px";
-          height = +window
-            .getComputedStyle(node)
-            ["height"] // .getPropertyValue("height")
-            .slice(0, -2);
-        }
-
-        if (node.innerText.length < 22) {
-          let currentFontSize = this.currencyPerPage > 6 ? 24 : 18;
-          node.style.fontSize = currentFontSize + "px";
-        }
-      });
-    },
-    changeFontSizeOfCalcData() {
-      const currencyCardList: any = this.$refs.calculatedData;
-      currencyCardList.forEach((node: HTMLElement) => {
-        let height = +window
-          .getComputedStyle(node)
-          .getPropertyValue("height")
-          .slice(0, -2);
-
-        while (height > 70) {
-          node.style.fontSize =
-            +window
-              .getComputedStyle(node)
-              .getPropertyValue("font-size")
-              .slice(0, -2) -
-            1 +
-            "px";
-          height = +window
-            .getComputedStyle(node)
-            ["height"] // .getPropertyValue("height")
-            .slice(0, -2);
-        }
-
-        if (node.innerText.length < 13) {
-          let currentFontSize = this.currencyPerPage > 6 ? 24 : 18;
-          node.style.fontSize = currentFontSize + "px";
-        }
-      });
-    },
     calcDecimalPointsNum(num: number) {
       let numCopy = num;
       let chars = numCopy.toString().split("");
@@ -521,53 +382,9 @@ $animation-duration: 0.8s;
   button:focus {
     outline: none;
   }
-  .mr-3 {
-    display: inline-block;
-    margin-right: 10px;
-  }
-
-  &__chevron-btn {
-    cursor: pointer;
-    position: relative;
-    margin: auto 5px;
-    bottom: 3px;
-  }
   &__currency-info {
     padding: 24px;
-    // height: 471px;
     background-color: #fff;
-  }
-
-  &__pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 51px;
-  }
-  &__pagination-btn {
-    padding: 10px 18px 8px 25px;
-    border: none;
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 16px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    background: #ffffff;
-    box-shadow: 0px 5px 6px rgba(157, 157, 157, 0.16);
-    border-radius: 8px;
-    cursor: pointer;
-
-    color: #787878;
-  }
-  &__pagination-btn svg {
-    position: relative;
-    top: 1px;
-  }
-
-  &__pagination-btn:first-child {
-    margin-right: 19px;
-  }
-  &__pagination-btn_disable {
-    background: #efefef;
   }
 }
 @media screen and (max-width: 992px) {

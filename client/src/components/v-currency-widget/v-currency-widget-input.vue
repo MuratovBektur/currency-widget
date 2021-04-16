@@ -22,7 +22,7 @@ export default Vue.extend({
       get() {
         return this.value;
       },
-      set(val) {
+      set(val: any): void {
         this.$emit("input", val);
       },
     },

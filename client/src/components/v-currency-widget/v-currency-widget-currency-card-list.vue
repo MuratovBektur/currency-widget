@@ -21,27 +21,6 @@
       :calculatedRate="calculatedRate"
       :currencyPerPage="currencyPerPage"
     />
-    <!-- <div
-      v-for="currency of activeCurrencyCardList"
-      :key="currency.id"
-      class="v-currency-widget__currency-card"
-    >
-      <div class="v-currency-widget__currency-card-input-data" ref="inputData">
-        <span class="v-currency-widget__currency-card-input-data-number">
-          {{ increaseRate }}
-        </span>
-        {{ activeCurrencyName }} =
-      </div>
-      <div
-        class="v-currency-widget__currency-card-calculated-data"
-        ref="calculatedData"
-      >
-        <span class="v-currency-widget__currency-card-calculated-data-number">
-          {{ calculatedRate[currency.id] }}
-        </span>
-        {{ currency.name }}
-      </div>
-    </div> -->
   </div>
 </template>
 
