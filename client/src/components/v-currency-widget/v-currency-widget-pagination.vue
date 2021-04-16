@@ -82,8 +82,12 @@ export default Vue.extend({
     box-shadow: 0px 5px 6px rgba(157, 157, 157, 0.16);
     border-radius: 8px;
     cursor: pointer;
-
+    transform: translateY(0);
+    transition: transform 1s;
     color: #787878;
+    &:active {
+      transform: translateY(15px);
+    }
     & svg {
       position: relative;
       top: 1px;
@@ -93,6 +97,9 @@ export default Vue.extend({
     }
     &_disable {
       background: #efefef;
+      &:active {
+        transform: translateY(0);
+      }
     }
   }
 }
